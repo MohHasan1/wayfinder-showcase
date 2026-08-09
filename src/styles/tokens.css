@@ -1,0 +1,57 @@
+/* ===================================================================
+   THEME TOKENS — edit ONLY this :root block to re-theme the whole deck.
+   The SAME token vocabulary as the `slides` (Slidev) and `webdeck` skills,
+   so a brand looks identical across all of them. The values below are a
+   "dark product" default — REPLACE them to match the brief or the brand.
+   =================================================================== */
+:root {
+  /* Surfaces — light WayFinder palette */
+  --bg: #f4f6f8;
+  --bg-grad-1: rgba(26, 115, 102, 0.07);
+  --bg-grad-2: rgba(79, 209, 197, 0.05);
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-2: rgba(255, 255, 255, 0.6);
+
+  /* Ink */
+  --fg: #0a1f1c;
+  --fg-muted: #5a6b66;
+  --fg-faint: #9aa8a4;
+
+  /* Hairlines */
+  --hair: rgba(10, 31, 28, 0.12);
+  --hair-2: rgba(10, 31, 28, 0.06);
+
+  /* Accent — WayFinder teal/green */
+  --primary: #1a7266;
+  --accent: linear-gradient(115deg, #2dbf9a 0%, #1a7266 100%);
+  --accent-ink: #ffffff;
+
+  /* Radius */
+  --radius: 22px;
+  --radius-sm: 12px;
+  --radius-lg: 26px;
+
+  /* Depth */
+  --shadow: 0 50px 120px -50px rgba(10, 31, 28, 0.28);
+  --glow: 0 30px 80px -40px rgba(26, 115, 102, 0.35);
+
+  /* Type */
+  --font-head: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+    sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Motion */
+  --dur: 0.4s;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Atmosphere */
+  --grain: 0.02;
+  --vignette: rgba(10, 31, 28, 0.06);
+
+  /* Responsive gutter — fluid side / vertical padding */
+  --gutter: clamp(28px, 6vw, 120px);
+  --gutter-y: clamp(40px, 8vh, 96px);
+}
