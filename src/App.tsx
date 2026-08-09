@@ -5,8 +5,6 @@ import Reveal from './deck/Reveal';
 import Section from './components/Section';
 import BrowserFrame from './components/BrowserFrame';
 
-const SHOT = (f: string) => `/assets/screenshots/${f}`;
-
 const img = (src: string, alt: string, extra: React.CSSProperties = {}) => (
   <img
     src={src}
@@ -585,7 +583,7 @@ export default function App() {
                   lineHeight: 1.45,
                 }}
               >
-                Automatic nodes, connections, and hallway paths.
+                Automatic nodes and connections, with assisted hallway path creation.
               </p>
             </Reveal>
 
