@@ -82,16 +82,38 @@ export const presentationTimeline: SlideTiming[] = [
   },
   {
     duration: 21.5,
-    builds: [],
+    builds: [10.05, 16],
     audio: '/audio/14-multi-floor-routing.mp3',
-    // Narration emphasis cue: 9.81s–10.96s floor-connector pause.
-    // Both floor screenshots intentionally remain visible throughout.
   },
-  { duration: 16 },
-  { duration: 15, builds: [7] },
-  { duration: 7 },
-  { duration: 18, builds: [5, 9, 13] },
-  { duration: 10, builds: [3, 6] },
+  {
+    duration: 23.2,
+    builds: [17.75, 20],
+    audio: '/audio/15-accessible-routing.mp3',
+    // Build 1 lands in the 17.52s–18.09s pause between the escalator
+    // and accessible-elevator examples; Build 2 reveals the comparison.
+  },
+  {
+    duration: 18.3,
+    builds: [8],
+    audio: '/audio/16-qr-wayfinding.mp3',
+    // Build 1 lands in the 7.46s–8.60s pause before the visitor scan.
+  },
+  {
+    duration: 9,
+    builds: [],
+    audio: '/audio/17-future-work-opener.mp3',
+    // Narration pause at 3.12s–3.78s; no visual Build is required.
+  },
+  {
+    duration: 21.1,
+    builds: [4.7, 8.65, 14.55],
+    audio: '/audio/18-future-directions.mp3',
+  },
+  {
+    duration: 4,
+    builds: [0.8, 2.45],
+    audio: '/audio/19-demo-handoff.mp3',
+  },
 ];
 
 export const presentationDuration = presentationTimeline.reduce(

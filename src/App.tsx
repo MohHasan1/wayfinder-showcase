@@ -877,7 +877,7 @@ export default function App() {
       <Slide full nav="Multi-floor routing" notes="The route reaches Elevator 1 on Floor 1, then continues toward the destination on Floor 2.">
         <div
           style={{
-            width: 'min(1480px, calc(100vw - 140px))',
+            width: 'min(1610px, calc(100vw - 140px))',
             height: '100%',
             marginInline: 'auto',
             display: 'flex',
@@ -885,58 +885,51 @@ export default function App() {
             justifyContent: 'center',
           }}
         >
-          <Reveal style={{ width: '100%', maxWidth: 760 }}>
-            <p className="kicker" style={{ marginBottom: 16 }}>
+          <Reveal style={{ width: '100%', marginInline: 'auto', textAlign: 'center' }}>
+            <div style={{ maxWidth: 700, marginInline: 'auto' }}>
+            <p className="kicker" style={{ marginBottom: 10, marginInline: 'auto', fontSize: 13, textAlign: 'center' }}>
               MULTI-FLOOR ROUTING
             </p>
             <h2
               className="headline"
               style={{
-                fontSize: 'clamp(46px, 4vw, 68px)',
-                lineHeight: 1,
+                fontSize: 'clamp(48px, 4.1vw, 66px)',
+                lineHeight: 0.98,
                 letterSpacing: '-0.035em',
-                maxWidth: 760,
+                fontWeight: 650,
+                maxWidth: 700,
+                marginInline: 'auto',
+                textAlign: 'center',
               }}
             >
-              <span style={{ display: 'block' }}>The route does not stop</span>
+              <span style={{ display: 'block' }}>The route continues.</span>
               <span
                 className="accent-text"
                 style={{ display: 'block', paddingBottom: '0.1em', marginBottom: '-0.1em' }}
               >
-                when the floor changes.
+                Even across floors.
               </span>
             </h2>
+            </div>
           </Reveal>
 
           <Reveal
             style={{
               position: 'relative',
               width: '100%',
-              marginTop: 34,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-              gap: 28,
-              alignItems: 'start',
+              minHeight: 520,
+              margin: '34px auto 0',
             }}
           >
-            <div style={{ minWidth: 0 }}>
-              <div style={{ marginBottom: 12 }}>
-                <p
-                  style={{
-                    color: 'var(--fg-muted)',
-                    fontSize: 12,
-                    fontWeight: 500,
-                    letterSpacing: '0.12em',
-                  }}
-                >
-                  STEP 1
-                </p>
-                <p style={{ marginTop: 3, color: 'var(--fg)', fontSize: 20, fontWeight: 600 }}>
-                  Floor 1
-                </p>
-                <p style={{ marginTop: 3, color: 'var(--fg-muted)', fontSize: 'clamp(14px, 0.9vw, 15px)' }}>
+            <Build at={0} hideAt={1} y={0} duration={0.55} style={{ width: 'min(1080px, 100%)', marginInline: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '42px minmax(0, 1fr)', columnGap: 12, marginBottom: 10 }}>
+                <span style={{ gridRow: '1 / 3', color: 'var(--primary)', fontSize: 25, fontWeight: 700, lineHeight: 1 }}>01</span>
+                <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', lineHeight: 1 }}>
+                  FLOOR 1
+                </span>
+                <span style={{ marginTop: 5, color: 'var(--fg-muted)', fontSize: 15, lineHeight: 1.2 }}>
                   Route reaches Elevator 1
-                </p>
+                </span>
               </div>
               <div
                 style={{
@@ -954,26 +947,29 @@ export default function App() {
                   style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
               </div>
-            </div>
+            </Build>
 
-            <div style={{ minWidth: 0 }}>
-              <div style={{ marginBottom: 12 }}>
-                <p
-                  style={{
-                    color: 'var(--fg-muted)',
-                    fontSize: 12,
-                    fontWeight: 500,
-                    letterSpacing: '0.12em',
-                  }}
-                >
-                  STEP 2
-                </p>
-                <p className="accent-text" style={{ marginTop: 3, width: 'fit-content', fontSize: 20, fontWeight: 600 }}>
-                  Floor 2
-                </p>
-                <p style={{ marginTop: 3, color: 'var(--fg-muted)', fontSize: 'clamp(14px, 0.9vw, 15px)' }}>
+            <Build
+              at={1}
+              hideAt={2}
+              x={20}
+              y={0}
+              duration={0.55}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 2,
+              }}
+            >
+              <div style={{ width: 'min(1080px, 100%)', marginInline: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '42px minmax(0, 1fr)', columnGap: 12, marginBottom: 10 }}>
+                <span style={{ gridRow: '1 / 3', color: 'var(--primary)', fontSize: 25, fontWeight: 700, lineHeight: 1 }}>02</span>
+                <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', lineHeight: 1 }}>
+                  FLOOR 2
+                </span>
+                <span style={{ marginTop: 5, color: 'var(--fg-muted)', fontSize: 15, lineHeight: 1.2 }}>
                   Route continues to destination
-                </p>
+                </span>
               </div>
               <div
                 style={{
@@ -991,28 +987,49 @@ export default function App() {
                   style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
               </div>
-            </div>
+              </div>
+            </Build>
 
             <div
-              aria-hidden="true"
               style={{
                 position: 'absolute',
-                left: '50%',
-                top: '56%',
-                zIndex: 2,
-                transform: 'translate(-50%, -50%)',
-                whiteSpace: 'nowrap',
-                padding: '8px 14px',
-                borderRadius: 999,
-                border: '1px solid var(--hair)',
-                background: 'var(--surface)',
-                boxShadow: 'var(--glow)',
-                color: 'var(--fg-muted)',
-                fontSize: 12,
-                fontWeight: 600,
+                inset: 0,
+                zIndex: 4,
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                gap: 28,
+                alignItems: 'start',
+                paddingTop: 38,
+                boxSizing: 'border-box',
+                pointerEvents: 'none',
               }}
             >
-              FLOOR 1 → FLOOR 2
+              {([
+                ['01', 'FLOOR 1', 'Route reaches Elevator 1', '/assets/new/slide_13.1.png', 'Wayfinder Floor 1 route from Room 7 to Elevator 1', 409],
+                ['02', 'FLOOR 2', 'Route continues to destination', '/assets/new/slide_13.2.png', 'Wayfinder Floor 2 route from Elevator 1 to Room 17', -409],
+              ] as const).map(([number, floor, description, src, alt, x]) => (
+                <Build key={floor} at={2} x={x as number} y={0} hiddenScale={1.03} duration={0.78}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '38px minmax(0, 1fr)', columnGap: 10, marginBottom: 10 }}>
+                      <span style={{ gridRow: '1 / 3', color: 'var(--primary)', fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{number}</span>
+                      <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', lineHeight: 1 }}>{floor}</span>
+                      <span style={{ marginTop: 4, color: 'var(--fg-muted)', fontSize: 14, lineHeight: 1.2 }}>{description}</span>
+                    </div>
+                    <div
+                      style={{
+                        position: 'relative',
+                        overflow: 'hidden',
+                        borderRadius: 16,
+                        border: '1px solid var(--hair)',
+                        boxShadow: 'var(--shadow)',
+                        background: 'var(--surface)',
+                      }}
+                    >
+                      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }} />
+                    </div>
+                  </div>
+                </Build>
+              ))}
             </div>
           </Reveal>
         </div>
@@ -1029,17 +1046,20 @@ export default function App() {
             justifyContent: 'center',
           }}
         >
-          <Reveal style={{ width: '100%', maxWidth: 650 }}>
-            <p className="kicker" style={{ marginBottom: 16 }}>
+          <Reveal style={{ width: '100%', textAlign: 'center' }}>
+            <p className="kicker" style={{ marginBottom: 10, marginInline: 'auto', fontSize: 13, textAlign: 'center' }}>
               ACCESSIBLE ROUTING
             </p>
             <h2
               className="headline"
               style={{
-                fontSize: 'clamp(46px, 4vw, 68px)',
-                lineHeight: 1,
+                marginInline: 'auto',
+                fontSize: 'clamp(48px, 4.1vw, 66px)',
+                lineHeight: 0.98,
                 letterSpacing: '-0.035em',
+                fontWeight: 650,
                 maxWidth: 650,
+                textAlign: 'center',
               }}
             >
               <span style={{ display: 'block' }}>Not every path</span>
@@ -1049,28 +1069,17 @@ export default function App() {
 
           <Reveal
             style={{
+              position: 'relative',
               width: '100%',
               marginTop: 34,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-              gap: 28,
+              minHeight: 520,
             }}
           >
-            <div style={{ minWidth: 0 }}>
-              <div style={{ marginBottom: 12 }}>
-                <p
-                  style={{
-                    color: 'var(--fg-muted)',
-                    fontSize: 12,
-                    fontWeight: 500,
-                    letterSpacing: '0.12em',
-                  }}
-                >
-                  STANDARD ROUTE
-                </p>
-                <p style={{ marginTop: 3, color: 'var(--fg)', fontSize: 18, fontWeight: 600 }}>
-                  Escalator
-                </p>
+            <Build at={0} hideAt={1} y={0} duration={0.55} style={{ width: 'min(1080px, 100%)', marginInline: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '42px minmax(0, 1fr)', columnGap: 12, marginBottom: 10 }}>
+                <span style={{ gridRow: '1 / 3', color: 'var(--primary)', fontSize: 25, fontWeight: 700, lineHeight: 1 }}>01</span>
+                <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', lineHeight: 1 }}>STANDARD ROUTE</span>
+                <span style={{ marginTop: 5, color: 'var(--fg-muted)', fontSize: 15, lineHeight: 1.2 }}>Escalator</span>
               </div>
               <div
                 style={{
@@ -1087,30 +1096,23 @@ export default function App() {
                   alt="Standard Wayfinder route from Room 1 to Room 11 using Escalator 1"
                   style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
-                <div
-                  aria-hidden="true"
-                  style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }}
-                />
+                <div aria-hidden="true" style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }} />
               </div>
-            </div>
+            </Build>
 
-            <div style={{ minWidth: 0 }}>
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>
-                  <p
-                    style={{
-                      color: 'var(--fg-muted)',
-                      fontSize: 12,
-                      fontWeight: 500,
-                      letterSpacing: '0.12em',
-                    }}
-                  >
-                    ACCESSIBLE ROUTE
-                  </p>
-                </div>
-                <p className="accent-text" style={{ marginTop: 3, width: 'fit-content', fontSize: 18, fontWeight: 600 }}>
-                  Elevator
-                </p>
+            <Build
+              at={1}
+              hideAt={2}
+              x={20}
+              y={0}
+              duration={0.55}
+              style={{ position: 'absolute', inset: 0, zIndex: 2 }}
+            >
+              <div style={{ width: 'min(1080px, 100%)', marginInline: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '42px minmax(0, 1fr)', columnGap: 12, marginBottom: 10 }}>
+                <span style={{ gridRow: '1 / 3', color: 'var(--primary)', fontSize: 25, fontWeight: 700, lineHeight: 1 }}>02</span>
+                <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', lineHeight: 1 }}>ACCESSIBLE ROUTE</span>
+                <span className="accent-text" style={{ marginTop: 5, width: 'fit-content', fontSize: 15, fontWeight: 600, lineHeight: 1.2 }}>Elevator</span>
               </div>
               <div
                 style={{
@@ -1127,11 +1129,52 @@ export default function App() {
                   alt="Accessible Wayfinder route from Room 1 to Room 11 using Elevator 1"
                   style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
-                <div
-                  aria-hidden="true"
-                  style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }}
-                />
+                <div aria-hidden="true" style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }} />
               </div>
+              </div>
+            </Build>
+
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 4,
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                gap: 28,
+                alignItems: 'start',
+                paddingTop: 38,
+                boxSizing: 'border-box',
+                pointerEvents: 'none',
+              }}
+            >
+              {([
+                ['01', 'STANDARD ROUTE', 'Escalator', '/assets/new/slide_12.1.png', 'Standard Wayfinder route from Room 1 to Room 11 using Escalator 1', 409],
+                ['02', 'ACCESSIBLE ROUTE', 'Elevator', '/assets/new/slide_12.2.png', 'Accessible Wayfinder route from Room 1 to Room 11 using Elevator 1', -409],
+              ] as const).map(([number, route, connector, src, alt, x]) => (
+                <Build key={route} at={2} x={x as number} y={0} hiddenScale={1.03} duration={0.78}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '38px minmax(0, 1fr)', columnGap: 10, marginBottom: 10 }}>
+                      <span style={{ gridRow: '1 / 3', color: 'var(--primary)', fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{number}</span>
+                      <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', lineHeight: 1 }}>{route}</span>
+                      <span className={number === '02' ? 'accent-text' : undefined} style={{ marginTop: 4, width: 'fit-content', color: number === '02' ? undefined : 'var(--fg-muted)', fontSize: 14, fontWeight: number === '02' ? 600 : 400, lineHeight: 1.2 }}>{connector}</span>
+                    </div>
+                    <div
+                      style={{
+                        position: 'relative',
+                        overflow: 'hidden',
+                        borderRadius: 16,
+                        border: '1px solid var(--hair)',
+                        boxShadow: 'var(--shadow)',
+                        background: 'var(--surface)',
+                      }}
+                    >
+                      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }} />
+                      <div aria-hidden="true" style={{ position: 'absolute', inset: '0 0 auto', height: 6, background: 'var(--bg)' }} />
+                    </div>
+                  </div>
+                </Build>
+              ))}
             </div>
           </Reveal>
         </div>

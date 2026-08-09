@@ -9,12 +9,22 @@ import { useDeck } from './DeckContext';
    advances builds before moving to the next slide. */
 export default function Build({
   at = 1,
+  delay = 0,
+  duration = 0.45,
+  hideAt,
+  hiddenScale = 1,
+  x = 0,
   y = 16,
   children,
   className,
   style,
 }: {
   at?: number;
+  delay?: number;
+  duration?: number;
+  hideAt?: number;
+  hiddenScale?: number;
+  x?: number;
   y?: number;
   children: ReactNode;
   className?: string;
@@ -32,7 +42,7 @@ export default function Build({
       </div>
     );
 
-  const shown = clicks >= at;
+  const shown = clicks >= at && (hideAt == null || clicks < hideAt);
   return (
     <motion.div
       className={className}
@@ -40,10 +50,12 @@ export default function Build({
       initial={false}
       animate={{
         opacity: shown ? 1 : 0,
+        scale: shown ? 1 : hiddenScale,
+        x: shown ? 0 : x,
         y: shown ? 0 : y,
         filter: shown ? 'blur(0px)' : 'blur(3px)',
       }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ delay, duration, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
