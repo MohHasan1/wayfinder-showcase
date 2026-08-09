@@ -143,8 +143,8 @@ export default function Deck({ children }: { children: ReactNode }) {
   const playbackBaseRef = useRef(presentationElapsed);
   const playbackStartedRef = useRef(0);
   const frameRef = useRef<number | null>(null);
-  const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
-  const activeAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
+  const activeAudioSrcRef = useRef<string | null>(null);
   const [audioBlocked, setAudioBlocked] = useState(false);
 
   const timingFor = useCallback(
@@ -162,49 +162,42 @@ export default function Deck({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // iOS grants media playback permission per element. Prime every narration
-  // element synchronously from the user's Play tap so later slide changes do
-  // not depend on a fresh gesture. The current slide is started normally after
-  // the silent prime pass.
+  // iOS only grants media playback permission to an element that had play()
+  // called on it during a user gesture. We reuse a single <audio> element
+  // for every narration clip (swapping its src per slide) so there is only
+  // ever one element to unlock, from the Play tap.
   const unlockNarration = useCallback(() => {
-    const current = slideRef.current;
-    audioRefs.current.forEach((audio, index) => {
-      if (!audio || index === current) return;
-      audio.muted = true;
-      const result = audio.play();
-      const finishPrime = () => {
-        if (activeAudioRef.current !== audio) {
-          audio.pause();
-          audio.currentTime = 0;
-        }
-        audio.muted = false;
-      };
-      if (result) void result.then(finishPrime).catch(finishPrime);
-      else finishPrime();
-    });
+    const audio = audioElRef.current;
+    if (!audio) return;
+    audio.muted = true;
+    const result = audio.play();
+    const finishPrime = () => {
+      audio.pause();
+      audio.muted = false;
+    };
+    if (result) void result.then(finishPrime).catch(finishPrime);
+    else finishPrime();
   }, []);
 
   const syncAudio = useCallback(
     (index: number, localTime: number, shouldPlay: boolean) => {
       const source = timingFor(index).audio;
-      const audio = source ? audioRefs.current[index] : null;
+      const audio = audioElRef.current;
+      if (!audio) return;
       if (!source) {
-        if (activeAudioRef.current) {
-          activeAudioRef.current.pause();
-          activeAudioRef.current.currentTime = 0;
-          activeAudioRef.current = null;
+        if (activeAudioSrcRef.current) {
+          audio.pause();
+          audio.currentTime = 0;
+          activeAudioSrcRef.current = null;
         }
         return;
       }
-      if (!audio) return;
 
-      if (activeAudioRef.current !== audio) {
-        audioRefs.current.forEach((candidate) => {
-          if (!candidate || candidate === audio) return;
-          candidate.pause();
-          candidate.currentTime = 0;
-        });
-        activeAudioRef.current = audio;
+      if (activeAudioSrcRef.current !== source) {
+        audio.pause();
+        audio.src = source;
+        audio.load();
+        activeAudioSrcRef.current = source;
       }
       audio.muted = false;
 
@@ -212,7 +205,10 @@ export default function Deck({ children }: { children: ReactNode }) {
         ? audio.duration
         : localTime;
       const desiredTime = Math.max(0, Math.min(localTime, audioDuration));
-      if (Math.abs(audio.currentTime - desiredTime) > 0.12) {
+      if (
+        audio.readyState > 0 &&
+        Math.abs(audio.currentTime - desiredTime) > 0.12
+      ) {
         audio.currentTime = desiredTime;
       }
 
@@ -271,7 +267,7 @@ export default function Deck({ children }: { children: ReactNode }) {
     playingRef.current = false;
     applyPresentationTime(time);
     setIsPlaying(false);
-    activeAudioRef.current?.pause();
+    audioElRef.current?.pause();
     if (frameRef.current != null) cancelAnimationFrame(frameRef.current);
     frameRef.current = null;
   }, [applyPresentationTime]);
@@ -289,11 +285,10 @@ export default function Deck({ children }: { children: ReactNode }) {
 
   useEffect(
     () => () => {
-      audioRefs.current.forEach((audio) => {
-        if (!audio) return;
-        audio.pause();
-        audio.currentTime = 0;
-      });
+      const audio = audioElRef.current;
+      if (!audio) return;
+      audio.pause();
+      audio.currentTime = 0;
     },
     []
   );
@@ -662,18 +657,7 @@ export default function Deck({ children }: { children: ReactNode }) {
           aria-hidden="true"
           style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
         >
-          {presentationTimeline.map((timing, index) =>
-            timing.audio ? (
-              <audio
-                key={timing.audio}
-                ref={(element) => {
-                  audioRefs.current[index] = element;
-                }}
-                src={timing.audio}
-                preload="auto"
-              />
-            ) : null
-          )}
+          <audio ref={audioElRef} preload="auto" />
         </div>
         <DeckCtx.Provider value={liveCtx}>
           <div className="slide-stage" key={slide}>
