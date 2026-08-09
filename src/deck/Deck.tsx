@@ -172,23 +172,6 @@ export default function Deck({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // iOS only grants media playback permission to an element that had play()
-  // called on it during a user gesture. We reuse a single <audio> element
-  // for every narration clip (swapping its src per slide) so there is only
-  // ever one element to unlock, from the Play tap.
-  const unlockNarration = useCallback(() => {
-    const audio = audioElRef.current;
-    if (!audio) return;
-    audio.muted = true;
-    const result = audio.play();
-    const finishPrime = () => {
-      audio.pause();
-      audio.muted = false;
-    };
-    if (result) void result.then(finishPrime).catch(finishPrime);
-    else finishPrime();
-  }, []);
-
   const syncAudio = useCallback(
     (index: number, localTime: number, shouldPlay: boolean) => {
       const source = timingFor(index).audio;
@@ -284,14 +267,13 @@ export default function Deck({ children }: { children: ReactNode }) {
 
   const play = useCallback(() => {
     if (playingRef.current) return;
-    unlockNarration();
     if (elapsedRef.current >= presentationDuration) applyPresentationTime(0);
     playbackBaseRef.current = elapsedRef.current;
     playbackStartedRef.current = performance.now();
     playingRef.current = true;
     setIsPlaying(true);
     applyPresentationTime(elapsedRef.current);
-  }, [applyPresentationTime, unlockNarration]);
+  }, [applyPresentationTime]);
 
   useEffect(
     () => () => {
@@ -304,9 +286,8 @@ export default function Deck({ children }: { children: ReactNode }) {
   );
 
   const retryAudio = useCallback(() => {
-    unlockNarration();
     syncAudio(slideRef.current, slideElapsed, playingRef.current);
-  }, [slideElapsed, syncAudio, unlockNarration]);
+  }, [slideElapsed, syncAudio]);
 
   const togglePlayback = useCallback(() => {
     if (playingRef.current) pause();
