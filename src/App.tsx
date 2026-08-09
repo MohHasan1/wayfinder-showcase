@@ -637,7 +637,8 @@ export default function App() {
         </div>
       </Slide>
 
-      <Slide full nav="Accessible routing" notes="The same trip recalculates from the escalator to the elevator when accessible routing is enabled.">
+      {[
+        <Slide key="accessible-routing" full nav="Accessible routing" notes="The same trip recalculates from the escalator to the elevator when accessible routing is enabled.">
         <div
           style={{
             width: 'min(1610px, calc(100vw - 140px))',
@@ -754,30 +755,152 @@ export default function App() {
             </div>
           </Reveal>
         </div>
-      </Slide>
+        </Slide>,
 
-      <Slide
-        center
-        nav="Visitor · search"
-        notes="The visitor experience: search a destination."
-      >
-        <Reveal>
-          <p className="kicker" style={kickerCenter}>
-            Visitor experience
-          </p>
-          <h2 className="headline" style={phrase}>
-            Search a destination.
-          </h2>
-        </Reveal>
-        <Build at={1}>
-          <h2
-            className="headline accent-text"
-            style={{ ...phrase, marginTop: 14 }}
+        <Slide key="multi-floor-routing" full nav="Multi-floor routing" notes="The route reaches Elevator 1 on Floor 1, then continues toward the destination on Floor 2.">
+        <div
+          style={{
+            width: 'min(1480px, calc(100vw - 140px))',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <Reveal style={{ width: '100%', maxWidth: 760 }}>
+            <p className="kicker" style={{ marginBottom: 16 }}>
+              MULTI-FLOOR ROUTING
+            </p>
+            <h2
+              className="headline"
+              style={{
+                fontSize: 'clamp(46px, 4vw, 68px)',
+                lineHeight: 1,
+                letterSpacing: '-0.035em',
+                maxWidth: 760,
+              }}
+            >
+              <span style={{ display: 'block' }}>The route does not stop</span>
+              <span
+                className="accent-text"
+                style={{ display: 'block', paddingBottom: '0.1em', marginBottom: '-0.1em' }}
+              >
+                when the floor changes.
+              </span>
+            </h2>
+          </Reveal>
+
+          <Reveal
+            style={{
+              position: 'relative',
+              width: '100%',
+              marginTop: 34,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              gap: 28,
+              alignItems: 'start',
+            }}
           >
-            WayFinder calculates the route.
-          </h2>
-        </Build>
-      </Slide>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ marginBottom: 12 }}>
+                <p
+                  style={{
+                    color: 'var(--fg-muted)',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    letterSpacing: '0.12em',
+                  }}
+                >
+                  STEP 1
+                </p>
+                <p style={{ marginTop: 3, color: 'var(--fg)', fontSize: 20, fontWeight: 600 }}>
+                  Floor 1
+                </p>
+                <p style={{ marginTop: 3, color: 'var(--fg-muted)', fontSize: 'clamp(14px, 0.9vw, 15px)' }}>
+                  Route reaches Elevator 1
+                </p>
+              </div>
+              <div
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: 18,
+                  border: '1px solid var(--hair)',
+                  boxShadow: 'var(--shadow)',
+                  background: 'var(--surface)',
+                }}
+              >
+                <img
+                  src="/assets/new/slide_13.1.png"
+                  alt="Wayfinder Floor 1 route from Room 7 to Elevator 1"
+                  style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ minWidth: 0 }}>
+              <div style={{ marginBottom: 12 }}>
+                <p
+                  style={{
+                    color: 'var(--fg-muted)',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    letterSpacing: '0.12em',
+                  }}
+                >
+                  STEP 2
+                </p>
+                <p className="accent-text" style={{ marginTop: 3, width: 'fit-content', fontSize: 20, fontWeight: 600 }}>
+                  Floor 2
+                </p>
+                <p style={{ marginTop: 3, color: 'var(--fg-muted)', fontSize: 'clamp(14px, 0.9vw, 15px)' }}>
+                  Route continues to destination
+                </p>
+              </div>
+              <div
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: 18,
+                  border: '1px solid var(--hair)',
+                  boxShadow: 'var(--shadow)',
+                  background: 'var(--surface)',
+                }}
+              >
+                <img
+                  src="/assets/new/slide_13.2.png"
+                  alt="Wayfinder Floor 2 route from Elevator 1 to Room 17"
+                  style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
+                />
+              </div>
+            </div>
+
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '56%',
+                zIndex: 2,
+                transform: 'translate(-50%, -50%)',
+                whiteSpace: 'nowrap',
+                padding: '8px 14px',
+                borderRadius: 999,
+                border: '1px solid var(--hair)',
+                background: 'var(--surface)',
+                boxShadow: 'var(--glow)',
+                color: 'var(--fg-muted)',
+                fontSize: 12,
+                fontWeight: 600,
+              }}
+            >
+              FLOOR 1 → FLOOR 2
+            </div>
+          </Reveal>
+        </div>
+        </Slide>,
+      ].reverse()}
 
       {/* ═════════════ SECTION 4 — CURRENT WORKING FEATURES ═════════════ */}
       <Section
