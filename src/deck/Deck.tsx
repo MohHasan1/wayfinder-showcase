@@ -16,23 +16,33 @@ import {
   IconGrid,
   IconLeft,
   IconRight,
+  IconPlay,
+  IconPause,
+  IconRestart,
   IconPencil,
   IconExpand,
   IconShrink,
   IconPresent,
   IconClose,
 } from './icons';
+import {
+  presentationDuration,
+  presentationTimeline,
+  slideStartTime,
+} from './timeline';
 
 /* ── The paged presentation engine + the Slidev-style chrome (dock + rail).
    Wrap your <Slide>/<Bento>/… in <Deck>. Each top-level child is one slide.
-     → / ↓ / Space   next (reveals the next <Build>, then the next slide)
+     → / ↓           next (reveals the next <Build>, then the next slide)
      ← / ↑           previous            S sidebar     G grid view
      Home / End      first / last        A annotate    P presenter (new tab)
-     F fullscreen    H hide/show the UI
+     Space play/pause   R restart         F fullscreen  H hide/show the UI
    Copy verbatim; theme only via the :root tokens. ───────────────────────── */
 
 const fmt = (s: number) =>
-  `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(
+  `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(
+    Math.floor(s % 60)
+  ).padStart(
     2,
     '0'
   )}`;
@@ -99,7 +109,11 @@ export default function Deck({ children }: { children: ReactNode }) {
   const [railOpen, setRailOpen] = useState(false);
   const [gridOpen, setGridOpen] = useState(false);
   const [drawing, setDrawing] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [presentationElapsed, setPresentationElapsed] = useState(() =>
+    slideStartTime(slide)
+  );
+  const [slideElapsed, setSlideElapsed] = useState(0);
   const [fs, setFs] = useState(false);
   const [uiHidden, setUiHidden] = useState(false);
   const [nearDock, setNearDock] = useState(false);
@@ -120,6 +134,91 @@ export default function Deck({ children }: { children: ReactNode }) {
   const annStore = useRef<Record<number, Stroke[]>>({});
   const slideRef = useRef(slide);
   slideRef.current = slide;
+  const clicksRef = useRef(clicks);
+  clicksRef.current = clicks;
+  const playingRef = useRef(isPlaying);
+  playingRef.current = isPlaying;
+  const elapsedRef = useRef(presentationElapsed);
+  elapsedRef.current = presentationElapsed;
+  const playbackBaseRef = useRef(presentationElapsed);
+  const playbackStartedRef = useRef(0);
+  const frameRef = useRef<number | null>(null);
+
+  const timingFor = useCallback(
+    (index: number) =>
+      presentationTimeline[index] ?? { duration: 10, builds: [] },
+    []
+  );
+
+  const applyPresentationTime = useCallback(
+    (absoluteTime: number) => {
+      const time = Math.max(0, Math.min(presentationDuration, absoluteTime));
+      let index = 0;
+      let start = 0;
+      while (
+        index < total - 1 &&
+        time >= start + timingFor(index).duration
+      ) {
+        start += timingFor(index).duration;
+        index += 1;
+      }
+
+      const timing = timingFor(index);
+      const local = Math.min(timing.duration, Math.max(0, time - start));
+      const nextClicks = (timing.builds ?? []).filter((cue) => cue <= local)
+        .length;
+
+      elapsedRef.current = time;
+      setPresentationElapsed(time);
+      setSlideElapsed(local);
+      if (slideRef.current !== index) {
+        slideRef.current = index;
+        setSlide(index);
+        setCurMax(maxMap.current[index] || 0);
+      }
+      if (clicksRef.current !== nextClicks) {
+        clicksRef.current = nextClicks;
+        setClicks(nextClicks);
+      }
+    },
+    [timingFor, total]
+  );
+
+  const pause = useCallback(() => {
+    if (!playingRef.current) return;
+    const now = performance.now();
+    const time =
+      playbackBaseRef.current +
+      (now - playbackStartedRef.current) / 1000;
+    applyPresentationTime(time);
+    playingRef.current = false;
+    setIsPlaying(false);
+    if (frameRef.current != null) cancelAnimationFrame(frameRef.current);
+    frameRef.current = null;
+  }, [applyPresentationTime]);
+
+  const play = useCallback(() => {
+    if (playingRef.current) return;
+    if (elapsedRef.current >= presentationDuration) applyPresentationTime(0);
+    playbackBaseRef.current = elapsedRef.current;
+    playbackStartedRef.current = performance.now();
+    playingRef.current = true;
+    setIsPlaying(true);
+  }, [applyPresentationTime]);
+
+  const togglePlayback = useCallback(() => {
+    if (playingRef.current) pause();
+    else play();
+  }, [pause, play]);
+
+  const seekToSlide = useCallback(
+    (index: number, localTime = 0) => {
+      const n = Math.max(0, Math.min(total - 1, index));
+      applyPresentationTime(slideStartTime(n) + localTime);
+      playbackBaseRef.current = elapsedRef.current;
+    },
+    [applyPresentationTime, total]
+  );
 
   const registerMax = useCallback((at: number) => {
     const m = maxMap.current;
@@ -129,38 +228,45 @@ export default function Deck({ children }: { children: ReactNode }) {
 
   const go = useCallback(
     (i: number) => {
-      const n = Math.max(0, Math.min(total - 1, i));
-      setSlide(n);
-      setClicks(0);
-      setCurMax(maxMap.current[n] || 0);
+      pause();
+      seekToSlide(i);
     },
-    [total]
+    [pause, seekToSlide]
   );
   const next = useCallback(() => {
+    pause();
     if (clicks < curMax) {
-      setClicks(clicks + 1);
+      const nextClick = clicks + 1;
+      const cue = timingFor(slide).builds?.[nextClick - 1];
+      clicksRef.current = nextClick;
+      setClicks(nextClick);
+      if (cue != null) seekToSlide(slide, cue);
       return;
     }
     if (slide < total - 1) {
-      const n = slide + 1;
-      setSlide(n);
-      setClicks(0);
-      setCurMax(maxMap.current[n] || 0);
+      seekToSlide(slide + 1);
     }
-  }, [clicks, curMax, slide, total]);
+  }, [clicks, curMax, pause, seekToSlide, slide, timingFor, total]);
   const prev = useCallback(() => {
+    pause();
     if (clicks > 0) {
-      setClicks(clicks - 1);
+      const previousClick = clicks - 1;
+      const cues = timingFor(slide).builds ?? [];
+      const local = previousClick > 0 ? cues[previousClick - 1] ?? 0 : 0;
+      seekToSlide(slide, local);
       return;
     }
     if (slide > 0) {
       const n = slide - 1;
-      const m = maxMap.current[n] || 0;
-      setSlide(n);
-      setClicks(m);
-      setCurMax(m);
+      const cues = timingFor(n).builds ?? [];
+      seekToSlide(n, cues[cues.length - 1] ?? 0);
     }
-  }, [clicks, slide]);
+  }, [clicks, pause, seekToSlide, slide, timingFor]);
+
+  const restart = useCallback(() => {
+    pause();
+    seekToSlide(0);
+  }, [pause, seekToSlide]);
 
   const toggleFs = useCallback(() => {
     if (document.fullscreenElement) document.exitFullscreen();
@@ -202,13 +308,14 @@ export default function Deck({ children }: { children: ReactNode }) {
         t &&
         (t.tagName === 'TEXTAREA' ||
           t.tagName === 'INPUT' ||
+          t.tagName === 'BUTTON' ||
+          t.tagName === 'SELECT' ||
           t.isContentEditable)
       )
         return;
       switch (e.key) {
         case 'ArrowRight':
         case 'ArrowDown':
-        case ' ':
         case 'PageDown':
           e.preventDefault();
           next();
@@ -218,6 +325,10 @@ export default function Deck({ children }: { children: ReactNode }) {
         case 'PageUp':
           e.preventDefault();
           prev();
+          break;
+        case ' ':
+          e.preventDefault();
+          togglePlayback();
           break;
         case 'Home':
           e.preventDefault();
@@ -251,6 +362,11 @@ export default function Deck({ children }: { children: ReactNode }) {
         case 'H':
           setUiHidden((v) => !v);
           break;
+        case 'r':
+        case 'R':
+          e.preventDefault();
+          restart();
+          break;
         case 'Escape':
           setRailOpen(false);
           setGridOpen(false);
@@ -261,7 +377,48 @@ export default function Deck({ children }: { children: ReactNode }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [next, prev, go, total, toggleRail, toggleGrid, toggleFs, openPresenter]);
+  }, [next, prev, go, total, toggleRail, toggleGrid, toggleFs, openPresenter, restart, togglePlayback]);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const tick = (now: number) => {
+      const time =
+        playbackBaseRef.current +
+        (now - playbackStartedRef.current) / 1000;
+      if (time >= presentationDuration) {
+        applyPresentationTime(presentationDuration);
+        playingRef.current = false;
+        setIsPlaying(false);
+        frameRef.current = null;
+        return;
+      }
+      applyPresentationTime(time);
+      frameRef.current = requestAnimationFrame(tick);
+    };
+    frameRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (frameRef.current != null) cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    };
+  }, [applyPresentationTime, isPlaying]);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    if (presentationTimeline.length !== total) {
+      console.warn(
+        `Presentation timeline has ${presentationTimeline.length} entries for ${total} slides.`
+      );
+    }
+    presentationTimeline.forEach((timing, index) => {
+      timing.builds?.forEach((cue) => {
+        if (cue > timing.duration) {
+          console.warn(
+            `Slide ${index + 1} Build cue ${cue}s exceeds its ${timing.duration}s duration and will be ignored.`
+          );
+        }
+      });
+    });
+  }, [total]);
 
   // safety net: if the authored deck kept the placeholder tab title, derive
   // one from the current slide's heading so shared links look right.
@@ -298,12 +455,15 @@ export default function Deck({ children }: { children: ReactNode }) {
     c.onmessage = (e) => {
       if (e.data?.type === 'state') {
         applyingRemote.current = true;
-        setSlide(e.data.slide);
-        setClicks(e.data.clicks);
+        pause();
+        const cues = timingFor(e.data.slide).builds ?? [];
+        const local =
+          e.data.clicks > 0 ? cues[e.data.clicks - 1] ?? 0 : 0;
+        seekToSlide(e.data.slide, local);
       }
     };
     return () => c.close();
-  }, []);
+  }, [pause, seekToSlide, timingFor]);
   useEffect(() => {
     if (applyingRemote.current) {
       applyingRemote.current = false;
@@ -312,18 +472,12 @@ export default function Deck({ children }: { children: ReactNode }) {
     chan.current?.postMessage({ type: 'state', slide, clicks });
   }, [slide, clicks]);
 
-  // fullscreen flag, presenter timer, idle auto-hide
+  // fullscreen flag and idle auto-hide
   useEffect(() => {
     const h = () => setFs(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', h);
     return () => document.removeEventListener('fullscreenchange', h);
   }, []);
-  useEffect(() => {
-    if (!isPresenter) return;
-    setElapsed(0);
-    const t = setInterval(() => setElapsed((e) => e + 1), 1000);
-    return () => clearInterval(t);
-  }, [isPresenter]);
   // mouse-driven only: keyboard nav keeps the UI hidden; the dock returns when
   // the pointer nears the bottom (where it lives); the cursor hides on idle.
   useEffect(() => {
@@ -350,7 +504,10 @@ export default function Deck({ children }: { children: ReactNode }) {
   const notes = (slides[slide]?.props as { notes?: string } | undefined)?.notes;
   const noteText = noteOverrides[slide] ?? notes ?? '';
   const nextSlide = slides[slide + 1];
-  const hideUI = uiHidden || (fs && !nearDock);
+  const hideUI =
+    uiHidden ||
+    (isPlaying && cursorIdle && !nearDock) ||
+    (fs && !nearDock);
   const cursorHidden = fs && cursorIdle && !drawing;
   const showAnnotator = drawing || (annStore.current[slide]?.length ?? 0) > 0;
 
@@ -366,6 +523,13 @@ export default function Deck({ children }: { children: ReactNode }) {
       >
         <IconLeft />
       </button>
+      <button
+        className={'noir-icon-btn' + (isPlaying ? ' on' : '')}
+        data-tip={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
+        onClick={togglePlayback}
+      >
+        {isPlaying ? <IconPause /> : <IconPlay />}
+      </button>
       <div className="noir-counter">
         <span className="noir-counter-now">{slide + 1}</span>
         <span className="noir-counter-tot">/ {total}</span>
@@ -378,12 +542,25 @@ export default function Deck({ children }: { children: ReactNode }) {
       >
         <IconRight />
       </button>
+      <button
+        className="noir-icon-btn"
+        data-tip="Restart (R)"
+        onClick={restart}
+      >
+        <IconRestart />
+      </button>
+      <div className="noir-playback-time" aria-label="Presentation time">
+        {fmt(presentationElapsed)} / {fmt(presentationDuration)}
+      </div>
     </>
   );
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className={'deck' + (cursorHidden ? ' nocursor' : '')}>
+      <div
+        className={'deck' + (cursorHidden ? ' nocursor' : '')}
+        data-slide-elapsed={slideElapsed.toFixed(3)}
+      >
         <DeckCtx.Provider value={liveCtx}>
           <div className="slide-stage" key={slide}>
             {slides[slide]}
@@ -464,7 +641,9 @@ export default function Deck({ children }: { children: ReactNode }) {
               <span className="noir-presenter-label">
                 Presenter · {slide + 1} / {total}
               </span>
-              <span className="noir-presenter-timer">{fmt(elapsed)}</span>
+              <span className="noir-presenter-timer">
+                {fmt(presentationElapsed)} / {fmt(presentationDuration)}
+              </span>
             </div>
             {nextSlide && (
               <div className="noir-presenter-next">
@@ -488,6 +667,23 @@ export default function Deck({ children }: { children: ReactNode }) {
           {/* phones: nav floats bare above the tools pill (see base.css) */}
           <div className="noir-bar noir-nav-bar">{navCluster}</div>
           <div className="noir-bar">
+            <div
+              className="noir-playback-progress"
+              role="progressbar"
+              aria-label="Presentation progress"
+              aria-valuemin={0}
+              aria-valuemax={presentationDuration}
+              aria-valuenow={presentationElapsed}
+            >
+              <span
+                style={{
+                  width: `${Math.min(
+                    100,
+                    (presentationElapsed / presentationDuration) * 100
+                  )}%`,
+                }}
+              />
+            </div>
             <button
               className={'noir-icon-btn' + (railOpen ? ' on' : '')}
               data-tip="Sidebar (S)"

@@ -35,6 +35,22 @@ export const IconRight = () => (
     <path d="M9 5l7 7-7 7" />
   </svg>
 );
+export const IconPlay = () => (
+  <svg {...base} fill="currentColor" stroke="none">
+    <path d="M8 5.5v13l10-6.5z" />
+  </svg>
+);
+export const IconPause = () => (
+  <svg {...base} fill="currentColor" stroke="none">
+    <rect x="7" y="5" width="3.5" height="14" rx="1" />
+    <rect x="13.5" y="5" width="3.5" height="14" rx="1" />
+  </svg>
+);
+export const IconRestart = () => (
+  <svg {...base}>
+    <path d="M5 8V4m0 0h4M5 4l3.2 3.2A7 7 0 1 1 5.4 14" />
+  </svg>
+);
 export const IconPencil = () => (
   <svg {...base}>
     <path d="M4 20h4l10-10a2 2 0 0 0-3-3L5 17z" />
