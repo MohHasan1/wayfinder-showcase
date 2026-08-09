@@ -170,13 +170,17 @@ export default function Deck({ children }: { children: ReactNode }) {
     const current = slideRef.current;
     audioRefs.current.forEach((audio, index) => {
       if (!audio || index === current) return;
-      const volume = audio.volume;
-      audio.volume = 0;
+      audio.muted = true;
       const result = audio.play();
-      audio.pause();
-      audio.currentTime = 0;
-      audio.volume = volume;
-      if (result) void result.catch(() => undefined);
+      const finishPrime = () => {
+        if (activeAudioRef.current !== audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+        audio.muted = false;
+      };
+      if (result) void result.then(finishPrime).catch(finishPrime);
+      else finishPrime();
     });
   }, []);
 
@@ -195,12 +199,14 @@ export default function Deck({ children }: { children: ReactNode }) {
       if (!audio) return;
 
       if (activeAudioRef.current !== audio) {
-        if (activeAudioRef.current) {
-          activeAudioRef.current.pause();
-          activeAudioRef.current.currentTime = 0;
-        }
+        audioRefs.current.forEach((candidate) => {
+          if (!candidate || candidate === audio) return;
+          candidate.pause();
+          candidate.currentTime = 0;
+        });
         activeAudioRef.current = audio;
       }
+      audio.muted = false;
 
       const audioDuration = Number.isFinite(audio.duration)
         ? audio.duration
