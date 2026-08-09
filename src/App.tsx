@@ -2,13 +2,8 @@ import Deck from './deck/Deck';
 import Slide from './deck/Slide';
 import Build from './deck/Build';
 import Reveal from './deck/Reveal';
-import Cover from './components/Cover';
 import Section from './components/Section';
-import Split from './components/Split';
 import BrowserFrame from './components/BrowserFrame';
-import Steps from './components/Steps';
-import Timeline from './components/Timeline';
-import NodeNetwork from './components/NodeNetwork';
 
 const SHOT = (f: string) => `/assets/screenshots/${f}`;
 
@@ -210,8 +205,7 @@ export default function App() {
                 maxWidth: 540,
               }}
             >
-              <span style={{ display: 'block' }}>Build, manage,</span>
-              <span style={{ display: 'block' }}>and publish</span>
+              <span style={{ display: 'block' }}>Build and publish</span>
               <span className="accent-text" style={{ display: 'block' }}>indoor maps.</span>
             </h2>
             <p
@@ -223,7 +217,7 @@ export default function App() {
                 lineHeight: 1.5,
               }}
             >
-              Create floors, build maps, publish for visitors, and generate room QR codes.
+              Create floors, build interactive maps, publish them for visitors, and generate room QR codes.
             </p>
           </Reveal>
 
@@ -243,6 +237,96 @@ export default function App() {
                 alt="Wayfinder Umbrella Medical Centre building dashboard showing floors and publishing controls"
                 style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
               />
+            </div>
+          </Reveal>
+        </div>
+      </Slide>
+
+      <Slide full nav="Organization management">
+        <div
+          style={{
+            width: 'min(1500px, calc(100vw - 120px))',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 0.34fr) minmax(0, 0.66fr)',
+            columnGap: 60,
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ width: '100%', minWidth: 0 }}>
+            <Reveal>
+              <p className="kicker" style={{ marginBottom: 16 }}>
+                ORGANIZATION MANAGEMENT
+              </p>
+              <h2
+                className="headline"
+                style={{
+                  fontSize: 'clamp(46px, 4vw, 68px)',
+                  lineHeight: 1,
+                  letterSpacing: '-0.035em',
+                  maxWidth: 'none',
+                  overflow: 'visible',
+                }}
+              >
+                <span style={{ display: 'block' }}>Manage the organization.</span>
+                <span className="accent-text" style={{ display: 'block' }}>Not just the map.</span>
+              </h2>
+              <p
+                style={{
+                  maxWidth: 400,
+                  marginTop: 24,
+                  color: 'var(--fg-muted)',
+                  fontSize: 'clamp(17px, 1.15vw, 19px)',
+                  lineHeight: 1.45,
+                }}
+              >
+                Manage buildings, people, and access from one workspace.
+              </p>
+            </Reveal>
+
+            <Build at={1} y={0} style={{ marginTop: 22 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 18px' }}>
+                {['Multiple buildings', 'Team roles', 'Building access'].map((item) => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span
+                      aria-hidden="true"
+                      style={{ width: 6, height: 6, flex: '0 0 auto', borderRadius: 999, background: 'var(--primary)' }}
+                    />
+                    <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 600 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </Build>
+          </div>
+
+          <Reveal style={{ width: '100%', minWidth: 0 }}>
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                minWidth: 0,
+                aspectRatio: '3600 / 2076',
+                overflow: 'hidden',
+                borderRadius: 18,
+                border: '1px solid var(--hair)',
+                boxShadow: 'var(--shadow)',
+                background: 'var(--surface)',
+              }}
+            >
+              <img
+                src="/assets/new/org.png"
+                alt="Wayfinder Umbrella Corp. organization page showing multiple managed buildings"
+                style={{ position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+              />
+
+              <Build at={1} y={0} style={{ position: 'absolute', inset: 0 }}>
+                <img
+                  src="/assets/new/users.png"
+                  alt="Wayfinder team management page showing Owner and Manager roles and Invite member"
+                  style={{ position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+              </Build>
             </div>
           </Reveal>
         </div>
@@ -455,6 +539,161 @@ export default function App() {
         </div>
       </Slide>
 
+      <Slide full nav="Smart Builder">
+        <div
+          style={{
+            width: 'min(1500px, calc(100vw - 120px))',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 0.32fr) minmax(0, 0.68fr)',
+            columnGap: 58,
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ width: '100%', minWidth: 0 }}>
+            <Reveal>
+              <p className="kicker" style={{ marginBottom: 16 }}>
+                SMART BUILDER
+              </p>
+              <h2
+                className="headline"
+                style={{
+                  fontSize: 'clamp(44px, 3.7vw, 64px)',
+                  lineHeight: 1.01,
+                  letterSpacing: '-0.035em',
+                  maxWidth: 'none',
+                  overflow: 'visible',
+                }}
+              >
+                <span style={{ display: 'block' }}>Draw the map.</span>
+                <span
+                  className="accent-text"
+                  style={{ display: 'block', marginTop: 20, paddingBottom: '0.08em', marginBottom: '-0.08em' }}
+                >
+                  Wayfinder builds
+                </span>
+                <span className="accent-text" style={{ display: 'block' }}>the network</span>
+                <span className="accent-text" style={{ display: 'block' }}>with you.</span>
+              </h2>
+              <p
+                style={{
+                  maxWidth: 390,
+                  marginTop: 26,
+                  color: 'var(--fg-muted)',
+                  fontSize: 'clamp(17px, 1.15vw, 19px)',
+                  lineHeight: 1.45,
+                }}
+              >
+                Automatic nodes, connections, and hallway paths.
+              </p>
+            </Reveal>
+
+            <Build at={2} y={0} style={{ marginTop: 26 }}>
+              <div style={{ display: 'grid', gap: 16 }}>
+                {[
+                  ['01', 'Auto Nodes', 'Creates routing points for eligible objects.'],
+                  ['02', 'Auto Connect', 'Connects them to the nearby hallway network.'],
+                  ['03', 'Hallway Paths', 'Speeds up drawing the walkable hallway spine.'],
+                ].map(([number, title, description]) => (
+                  <div
+                    key={number}
+                    style={{ display: 'grid', gridTemplateColumns: '28px minmax(0, 1fr)', columnGap: 12 }}
+                  >
+                    <span
+                      style={{
+                        color: 'var(--primary)',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        letterSpacing: '0.06em',
+                      }}
+                    >
+                      {number}
+                    </span>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ color: 'var(--fg)', fontSize: 'clamp(16px, 1.05vw, 17px)', fontWeight: 600, lineHeight: 1.2 }}>
+                        {title}
+                      </p>
+                      <p style={{ marginTop: 3, color: 'var(--fg-muted)', fontSize: 'clamp(13px, 0.9vw, 14px)', lineHeight: 1.4 }}>
+                        {description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Build>
+          </div>
+
+          <Reveal style={{ width: '100%', minWidth: 0 }}>
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                minWidth: 0,
+                aspectRatio: '3600 / 2072',
+                overflow: 'hidden',
+                borderRadius: 18,
+                border: '1px solid var(--hair)',
+                boxShadow: 'var(--shadow)',
+                background: 'var(--surface)',
+              }}
+            >
+              <img
+                src="/assets/new/slide_14.2.png"
+                alt="Wayfinder Smart Builder editor before the hallway navigation network is completed"
+                style={{ position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '42%',
+                  top: '36%',
+                  whiteSpace: 'nowrap',
+                  padding: '6px 9px',
+                  borderRadius: 999,
+                  border: '1px solid var(--hair)',
+                  background: 'rgba(255, 255, 255, 0.94)',
+                  boxShadow: 'var(--glow)',
+                  color: 'var(--fg)',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                }}
+              >
+                MAP CREATED
+              </div>
+
+              <Build at={1} y={0} style={{ position: 'absolute', inset: 0 }}>
+                <img
+                  src="/assets/new/slide_14.1.png"
+                  alt="Wayfinder Smart Builder editor with the generated hallway navigation network"
+                  style={{ position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '41%',
+                    top: '24%',
+                    whiteSpace: 'nowrap',
+                    padding: '6px 9px',
+                    borderRadius: 999,
+                    border: '1px solid var(--hair)',
+                    background: 'rgba(255, 255, 255, 0.94)',
+                    boxShadow: 'var(--glow)',
+                    color: 'var(--fg)',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                  }}
+                >
+                  NETWORK GENERATED
+                </div>
+              </Build>
+            </div>
+          </Reveal>
+        </div>
+      </Slide>
+
       <Slide full nav="Route calculation" notes="Wayfinder evaluates the navigation network and selects the shortest route.">
         <div
           style={{
@@ -637,127 +876,7 @@ export default function App() {
         </div>
       </Slide>
 
-      {[
-        <Slide key="accessible-routing" full nav="Accessible routing" notes="The same trip recalculates from the escalator to the elevator when accessible routing is enabled.">
-        <div
-          style={{
-            width: 'min(1610px, calc(100vw - 140px))',
-            height: '100%',
-            marginInline: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <Reveal style={{ width: '100%', maxWidth: 650 }}>
-            <p className="kicker" style={{ marginBottom: 16 }}>
-              ACCESSIBLE ROUTING
-            </p>
-            <h2
-              className="headline"
-              style={{
-                fontSize: 'clamp(46px, 4vw, 68px)',
-                lineHeight: 1,
-                letterSpacing: '-0.035em',
-                maxWidth: 650,
-              }}
-            >
-              <span style={{ display: 'block' }}>Not every path</span>
-              <span className="accent-text" style={{ display: 'block' }}>works for everyone.</span>
-            </h2>
-          </Reveal>
-
-          <Reveal
-            style={{
-              width: '100%',
-              marginTop: 34,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-              gap: 28,
-            }}
-          >
-            <div style={{ minWidth: 0 }}>
-              <div style={{ marginBottom: 12 }}>
-                <p
-                  style={{
-                    color: 'var(--fg-muted)',
-                    fontSize: 12,
-                    fontWeight: 500,
-                    letterSpacing: '0.12em',
-                  }}
-                >
-                  STANDARD ROUTE
-                </p>
-                <p style={{ marginTop: 3, color: 'var(--fg)', fontSize: 18, fontWeight: 600 }}>
-                  Escalator
-                </p>
-              </div>
-              <div
-                style={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: 18,
-                  border: '1px solid var(--hair)',
-                  boxShadow: 'var(--shadow)',
-                  background: 'var(--surface)',
-                }}
-              >
-                <img
-                  src="/assets/new/slide_12.1.png"
-                  alt="Standard Wayfinder route from Room 1 to Room 11 using Escalator 1"
-                  style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
-                />
-                <div
-                  aria-hidden="true"
-                  style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }}
-                />
-              </div>
-            </div>
-
-            <div style={{ minWidth: 0 }}>
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>
-                  <p
-                    style={{
-                      color: 'var(--fg-muted)',
-                      fontSize: 12,
-                      fontWeight: 500,
-                      letterSpacing: '0.12em',
-                    }}
-                  >
-                    ACCESSIBLE ROUTE
-                  </p>
-                </div>
-                <p className="accent-text" style={{ marginTop: 3, width: 'fit-content', fontSize: 18, fontWeight: 600 }}>
-                  Elevator
-                </p>
-              </div>
-              <div
-                style={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: 18,
-                  border: '1px solid var(--hair)',
-                  boxShadow: 'var(--shadow)',
-                  background: 'var(--surface)',
-                }}
-              >
-                <img
-                  src="/assets/new/slide_12.2.png"
-                  alt="Accessible Wayfinder route from Room 1 to Room 11 using Elevator 1"
-                  style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
-                />
-                <div
-                  aria-hidden="true"
-                  style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }}
-                />
-              </div>
-            </div>
-          </Reveal>
-        </div>
-        </Slide>,
-
-        <Slide key="multi-floor-routing" full nav="Multi-floor routing" notes="The route reaches Elevator 1 on Floor 1, then continues toward the destination on Floor 2.">
+      <Slide full nav="Multi-floor routing" notes="The route reaches Elevator 1 on Floor 1, then continues toward the destination on Floor 2.">
         <div
           style={{
             width: 'min(1480px, calc(100vw - 140px))',
@@ -899,305 +1018,493 @@ export default function App() {
             </div>
           </Reveal>
         </div>
-        </Slide>,
-      ].reverse()}
+      </Slide>
 
-      {/* ═════════════ SECTION 4 — CURRENT WORKING FEATURES ═════════════ */}
+      <Slide full nav="Accessible routing" notes="The same trip recalculates from the escalator to the elevator when accessible routing is enabled.">
+        <div
+          style={{
+            width: 'min(1610px, calc(100vw - 140px))',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <Reveal style={{ width: '100%', maxWidth: 650 }}>
+            <p className="kicker" style={{ marginBottom: 16 }}>
+              ACCESSIBLE ROUTING
+            </p>
+            <h2
+              className="headline"
+              style={{
+                fontSize: 'clamp(46px, 4vw, 68px)',
+                lineHeight: 1,
+                letterSpacing: '-0.035em',
+                maxWidth: 650,
+              }}
+            >
+              <span style={{ display: 'block' }}>Not every path</span>
+              <span className="accent-text" style={{ display: 'block' }}>works for everyone.</span>
+            </h2>
+          </Reveal>
+
+          <Reveal
+            style={{
+              width: '100%',
+              marginTop: 34,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              gap: 28,
+            }}
+          >
+            <div style={{ minWidth: 0 }}>
+              <div style={{ marginBottom: 12 }}>
+                <p
+                  style={{
+                    color: 'var(--fg-muted)',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    letterSpacing: '0.12em',
+                  }}
+                >
+                  STANDARD ROUTE
+                </p>
+                <p style={{ marginTop: 3, color: 'var(--fg)', fontSize: 18, fontWeight: 600 }}>
+                  Escalator
+                </p>
+              </div>
+              <div
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: 18,
+                  border: '1px solid var(--hair)',
+                  boxShadow: 'var(--shadow)',
+                  background: 'var(--surface)',
+                }}
+              >
+                <img
+                  src="/assets/new/slide_12.1.png"
+                  alt="Standard Wayfinder route from Room 1 to Room 11 using Escalator 1"
+                  style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
+                />
+                <div
+                  aria-hidden="true"
+                  style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ minWidth: 0 }}>
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>
+                  <p
+                    style={{
+                      color: 'var(--fg-muted)',
+                      fontSize: 12,
+                      fontWeight: 500,
+                      letterSpacing: '0.12em',
+                    }}
+                  >
+                    ACCESSIBLE ROUTE
+                  </p>
+                </div>
+                <p className="accent-text" style={{ marginTop: 3, width: 'fit-content', fontSize: 18, fontWeight: 600 }}>
+                  Elevator
+                </p>
+              </div>
+              <div
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: 18,
+                  border: '1px solid var(--hair)',
+                  boxShadow: 'var(--shadow)',
+                  background: 'var(--surface)',
+                }}
+              >
+                <img
+                  src="/assets/new/slide_12.2.png"
+                  alt="Accessible Wayfinder route from Room 1 to Room 11 using Elevator 1"
+                  style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
+                />
+                <div
+                  aria-hidden="true"
+                  style={{ position: 'absolute', inset: '0 0 auto', height: 3, background: 'var(--bg)' }}
+                />
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </Slide>
+
+      <Slide full nav="QR wayfinding">
+        <div
+          style={{
+            width: 'min(1500px, calc(100vw - 120px))',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 0.34fr) minmax(0, 0.66fr)',
+            columnGap: 60,
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ width: '100%', minWidth: 0 }}>
+            <Reveal>
+              <p className="kicker" style={{ marginBottom: 16 }}>
+                QR WAYFINDING
+              </p>
+              <h2
+                className="headline"
+                style={{
+                  fontSize: 'clamp(46px, 4vw, 68px)',
+                  lineHeight: 1,
+                  letterSpacing: '-0.035em',
+                  maxWidth: 'none',
+                  overflow: 'visible',
+                }}
+              >
+                <span style={{ display: 'block' }}>Scan where you are.</span>
+                <span className="accent-text" style={{ display: 'block' }}>Start from there.</span>
+              </h2>
+              <p
+                style={{
+                  maxWidth: 410,
+                  marginTop: 26,
+                  color: 'var(--fg-muted)',
+                  fontSize: 'clamp(17px, 1.15vw, 19px)',
+                  lineHeight: 1.45,
+                }}
+              >
+                A room QR opens Wayfinder with that location already set as the starting point.
+              </p>
+            </Reveal>
+
+            <Build at={1} y={0} style={{ marginTop: 22 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span
+                  aria-hidden="true"
+                  style={{ width: 6, height: 6, flex: '0 0 auto', borderRadius: 999, background: 'var(--primary)' }}
+                />
+                <span style={{ color: 'var(--fg)', fontSize: 14, fontWeight: 600 }}>
+                  No manual starting-point setup.
+                </span>
+              </div>
+            </Build>
+          </div>
+
+          <Reveal style={{ width: '100%', minWidth: 0 }}>
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                minWidth: 0,
+                aspectRatio: '3600 / 2076',
+                overflow: 'hidden',
+                borderRadius: 18,
+                border: '1px solid var(--hair)',
+                boxShadow: 'var(--shadow)',
+                background: 'var(--surface)',
+              }}
+            >
+              <img
+                src="/assets/new/qr1.png"
+                alt="Wayfinder Room 10 QR dialog with print and download actions"
+                style={{ position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '63%',
+                  top: '27%',
+                  whiteSpace: 'nowrap',
+                  padding: '6px 9px',
+                  borderRadius: 999,
+                  border: '1px solid var(--hair)',
+                  background: 'rgba(255, 255, 255, 0.94)',
+                  boxShadow: 'var(--glow)',
+                  color: 'var(--fg)',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                }}
+              >
+                ROOM 10 QR
+              </div>
+
+              <Build at={1} y={0} style={{ position: 'absolute', inset: 0 }}>
+                <img
+                  src="/assets/new/qr2.png"
+                  alt="Wayfinder public map with Room 10 automatically set as the starting location"
+                  style={{ position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '44%',
+                    top: '55%',
+                    whiteSpace: 'nowrap',
+                    padding: '6px 9px',
+                    borderRadius: 999,
+                    border: '1px solid var(--hair)',
+                    background: 'rgba(255, 255, 255, 0.94)',
+                    boxShadow: 'var(--glow)',
+                    color: 'var(--fg)',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                  }}
+                >
+                  START SET AUTOMATICALLY
+                </div>
+              </Build>
+            </div>
+          </Reveal>
+        </div>
+      </Slide>
+
       <Section
-        nav="Features"
-        n={4}
-        kicker="Section 4"
+        nav="Future work"
+        n={5}
+        kicker="Future work"
         title={
           <>
-            Current working <span className="accent-text">features.</span>
+            From routes
+            <br />
+            <span className="accent-text">to guided journeys.</span>
           </>
         }
       />
 
-      <Slide
-        center
-        nav="Features · list"
-        notes="Fast but clean montage. Don't read every line."
-      >
-        <Reveal>
-          <p className="kicker" style={kickerCenter}>
-            Shipping today
-          </p>
+      <Slide full nav="Future directions">
+        <div
+          style={{
+            width: 'min(1500px, calc(100vw - 120px))',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 0.38fr) minmax(0, 0.62fr)',
+            columnGap: 72,
+            alignItems: 'center',
+          }}
+        >
+          <Reveal
+            style={{
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+            }}
+          >
+            <p className="kicker" style={{ marginBottom: 16 }}>
+              WHAT COMES NEXT
+            </p>
+            <h2
+              className="headline"
+              style={{
+                fontSize: 'clamp(50px, 3.6vw, 64px)',
+                lineHeight: 0.98,
+                letterSpacing: '-0.04em',
+                fontWeight: 700,
+                maxWidth: 'none',
+                overflow: 'visible',
+              }}
+            >
+              <span style={{ display: 'block', whiteSpace: 'nowrap' }}>Where Wayfinder</span>
+              <span
+                className="accent-text"
+                style={{ display: 'block', whiteSpace: 'nowrap', paddingBottom: '0.08em', marginBottom: '-0.08em' }}
+              >
+                goes next.
+              </span>
+            </h2>
+            <div
+              style={{
+                marginTop: 24,
+                paddingLeft: 12,
+                borderLeft: '2px solid var(--primary)',
+              }}
+            >
+              <p
+                style={{
+                  color: 'var(--fg-faint)',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  lineHeight: 1.45,
+                }}
+              >
+                FUTURE DIRECTION · NOT YET BUILT
+              </p>
+            </div>
+          </Reveal>
+
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(min(240px, 100%), 1fr))',
-              gap: 'clamp(16px, 3vw, 28px)',
-              maxWidth: 900,
-              marginInline: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              minHeight: 0,
+              minWidth: 0,
             }}
           >
             {[
-              'Multi-floor navigation',
-              'Cross-floor destination search',
-              'Accessible routes',
-              'Responsive mobile experience',
-              'Different venue types',
-            ].map((f, i) => (
-              <Reveal key={f}>
+              {
+                number: '01',
+                title: 'AI-assisted map generation',
+                description: 'Generate a first version of an indoor map from an uploaded reference floor plan.',
+              },
+              {
+                number: '02',
+                title: 'Turn-by-turn & voice guidance',
+                description: 'Add written and spoken step-by-step directions beyond the route line.',
+              },
+              {
+                number: '03',
+                title: 'Live indoor positioning',
+                description: 'Update a visitor’s location as they move through the building.',
+              },
+              {
+                number: '04',
+                title: 'Smart building integrations',
+                description: 'Connect Wayfinder with kiosks, service robots, digital signage, and other building systems.',
+              },
+            ].map((item, index) => {
+              const row = (
                 <div
                   style={{
-                    padding: 'clamp(18px, 2.5vw, 28px)',
-                    borderRadius: 'var(--radius-sm)',
-                    background: 'var(--surface)',
-                    border: '1px solid var(--hair)',
-                    fontSize: 'clamp(17px, 2vw, 22px)',
-                    fontWeight: 600,
-                    lineHeight: 1.3,
+                    position: 'relative',
+                    minWidth: 0,
+                    display: 'grid',
+                    gridTemplateColumns: '72px minmax(0, 1fr)',
+                    columnGap: 24,
+                    alignItems: 'start',
+                    padding: 'clamp(24px, 2.5vh, 28px) 0',
+                    borderTop: index > 0 ? '1px solid var(--hair)' : 'none',
+                    paddingLeft: index === 0 ? 18 : 0,
                   }}
                 >
-                  <span className="accent-text" style={{ fontWeight: 700 }}>
-                    {String(i + 1).padStart(2, '0')}
-                  </span>{' '}
-                  {f}
+                  {index === 0 && (
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        position: 'absolute',
+                        inset: '24px auto 24px 0',
+                        width: 2,
+                        background: 'var(--primary)',
+                      }}
+                    />
+                  )}
+                  <p
+                    style={{
+                      color: 'var(--primary)',
+                      fontSize: 'clamp(30px, 2vw, 34px)',
+                      fontWeight: 650,
+                      letterSpacing: '-0.02em',
+                      lineHeight: 1,
+                    }}
+                  >
+                    {item.number}
+                  </p>
+                  <div style={{ minWidth: 0 }}>
+                    <h3
+                      style={{
+                        color: 'var(--fg)',
+                        fontSize: 'clamp(24px, 1.65vw, 28px)',
+                        fontWeight: index === 0 ? 700 : 650,
+                        letterSpacing: '-0.02em',
+                        lineHeight: 1.15,
+                      }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p
+                      style={{
+                        maxWidth: 620,
+                        marginTop: 8,
+                        color: 'var(--fg-muted)',
+                        fontSize: 'clamp(16px, 1.05vw, 18px)',
+                        lineHeight: 1.45,
+                      }}
+                    >
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
-              </Reveal>
-            ))}
+              );
+
+              return index === 0 ? (
+                <Reveal key={item.number}>{row}</Reveal>
+              ) : (
+                <Build key={item.number} at={index}>{row}</Build>
+              );
+            })}
           </div>
-        </Reveal>
+        </div>
       </Slide>
 
-      <Slide
-        center
-        nav="Features · montage"
-        notes="Feature montage — each phrase lands, then the next."
-      >
-        <Build at={0}>
-          <h2 className="headline" style={phrase}>
-            Multi-floor navigation.
-          </h2>
-        </Build>
-        <Build at={1}>
-          <h2 className="headline" style={{ ...phrase, marginTop: 14 }}>
-            Cross-floor destination search.
-          </h2>
-        </Build>
-        <Build at={2}>
-          <h2 className="headline accent-text" style={{ ...phrase, marginTop: 14 }}>
-            Accessible routes.
-          </h2>
-        </Build>
-        <Build at={3}>
-          <h2 className="headline" style={{ ...phrase, marginTop: 14 }}>
-            Responsive mobile experience.
-          </h2>
-        </Build>
-        <Build at={4}>
-          <h2
-            className="headline accent-text"
-            style={{ ...phrase, marginTop: 14 }}
-          >
-            Different venue types.
-          </h2>
-        </Build>
-      </Slide>
-
-      {/* ═════════════ SECTION 5 — TECHNICAL EXPLANATION ═════════════ */}
-      <Section
-        nav="How it works"
-        n={5}
-        kicker="Section 5"
-        title={
-          <>
-            How the <span className="accent-text">route</span> is found.
-          </>
-        }
-      />
-
-      <Slide
-        center
-        nav="Tech · network"
-        notes="Custom animated diagram. Rooms become data, points form a network, WayFinder searches it."
-      >
-        <Reveal>
-          <p className="kicker" style={kickerCenter}>
-            A simple technical explanation
-          </p>
-          <h2
-            className="headline"
-            style={{
-              textAlign: 'center',
-              marginInline: 'auto',
-              marginBottom: 'clamp(20px, 3vh, 30px)',
-            }}
-          >
-            Rooms become a navigation network.
-          </h2>
-        </Reveal>
-        <Reveal>
-          <div style={{ maxWidth: 820, marginInline: 'auto' }}>
-            <NodeNetwork />
-          </div>
-        </Reveal>
-      </Slide>
-
-      <Slide
-        center
-        nav="Tech · phrases"
-        notes="Three short phrases. Let the diagram sink in first."
-      >
-        <Build at={0}>
-          <h2 className="headline" style={phrase}>
-            Rooms are stored as data.
-          </h2>
-        </Build>
-        <Build at={1}>
-          <h2 className="headline" style={{ ...phrase, marginTop: 14 }}>
-            Walkable points form a navigation network.
-          </h2>
-        </Build>
-        <Build at={2}>
-          <h2
-            className="headline accent-text"
-            style={{ ...phrase, marginTop: 14 }}
-          >
-            WayFinder searches that network for the shortest route.
-          </h2>
-        </Build>
-      </Slide>
-
-      <Slide
-        center
-        nav="Tech · multi-floor"
-        notes="Multi-floor: Floor 1 network, elevator link, Floor 2 network, route continues."
-      >
-        <Reveal>
-          <p className="kicker" style={kickerCenter}>
-            Multi-floor routing
-          </p>
-          <h2 className="headline" style={phrase}>
-            Floor 1 → link → Floor 2 →{' '}
-            <span className="accent-text">destination.</span>
-          </h2>
-        </Reveal>
-      </Slide>
-
-      <Slide
-        center
-        nav="Tech · tools"
-        notes="Smart Builder and Floor Links speed up map creation."
-      >
-        <Build at={0}>
-          <h2 className="headline" style={phrase}>
-            Smart Builder speeds up map creation.
-          </h2>
-        </Build>
-        <Build at={1}>
-          <h2
-            className="headline accent-text"
-            style={{ ...phrase, marginTop: 14 }}
-          >
-            Floor Links connect stairs, elevators, and escalators.
-          </h2>
-        </Build>
-      </Slide>
-
-      {/* ═════════════ SECTION 6 — FUTURE WORK ═════════════ */}
-      <Section
-        nav="Future"
-        n={6}
-        kicker="Future possibilities"
-        title={
-          <>
-            What could come <span className="accent-text">next.</span>
-          </>
-        }
-      />
-
-      <Slide
-        center
-        nav="Future · roadmap"
-        notes="Clearly label these as future work, not completed features."
-      >
-        <Reveal>
-          <p className="kicker accent-text" style={kickerCenter}>
-            Future possibilities — not yet built
-          </p>
-          <h2
-            className="headline"
-            style={{
-              textAlign: 'center',
-              marginInline: 'auto',
-              marginBottom: 'clamp(24px, 4vh, 40px)',
-            }}
-          >
-            Where WayFinder could go.
-          </h2>
-        </Reveal>
-        <Reveal>
-          <div style={{ maxWidth: 620, marginInline: 'auto' }}>
-            <Timeline
-              items={[
-                {
-                  time: 'Next',
-                  title: 'Turn-by-turn directions',
-                  body: 'Written and spoken step-by-step guidance.',
-                },
-                {
-                  time: 'Next',
-                  title: 'Live indoor positioning',
-                  body: "Track a visitor's position in real time.",
-                },
-                {
-                  time: 'Next',
-                  title: 'Multiple buildings',
-                  body: 'One organization, many connected buildings.',
-                },
-                {
-                  time: 'Next',
-                  title: 'Faster map creation',
-                  body: 'Import existing floor plans automatically.',
-                },
-              ]}
+      {/* ═════════════ DEMO HANDOFF ═════════════ */}
+      <Slide full nav="Demo">
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            transform: 'translateY(-3vh)',
+          }}
+        >
+          <Reveal>
+            <img
+              src="/assets/logo/wayfinder-no-bg.png"
+              alt="Wayfinder logo"
+              style={{ display: 'block', width: 62, height: 'auto', margin: '0 auto 22px' }}
             />
-          </div>
-        </Reveal>
-      </Slide>
+            <p className="kicker" style={kickerCenter}>
+              NOW
+            </p>
+          </Reveal>
 
-      {/* ═════════════ SECTION 7 — ENDING ═════════════ */}
-      <Slide
-        full
-        nav="Ending · landing"
-        notes="Return to the landing page. Logo and route line animate."
-      >
-        <Reveal style={{ width: '100%', maxWidth: 1000, marginInline: 'auto' }}>
-          <BrowserFrame url="wayfinder.app">
-            <div style={{ ...screenCard, borderRadius: 0, border: 'none' }}>
-              {img(SHOT('01-landing-page.png'), 'WayFinder landing page')}
-            </div>
-          </BrowserFrame>
-        </Reveal>
-      </Slide>
+          <Build at={1} y={0}>
+            <h2
+              className="headline"
+              style={{
+                maxWidth: 1050,
+                marginInline: 'auto',
+                fontSize: 'clamp(56px, 7vw, 96px)',
+                fontWeight: 600,
+                lineHeight: 0.96,
+                letterSpacing: '-0.045em',
+                textAlign: 'center',
+              }}
+            >
+              <span style={{ display: 'block' }}>Now, see Wayfinder</span>
+              <span className="accent-text" style={{ display: 'block' }}>in action.</span>
+            </h2>
+          </Build>
 
-      <Slide center nav="Ending · tagline" notes="The tagline. Hold it.">
-        <Reveal>
-          <h2 className="display" style={{ fontSize: 'clamp(48px, 9vw, 120px)' }}>
-            <span className="accent-text">WayFinder</span>
-          </h2>
-          <p className="subhead" style={{ marginTop: 18 }}>
-            Clear indoor maps.
-          </p>
-          <p className="subhead" style={{ marginTop: 4 }}>
-            More confident arrivals.
-          </p>
-        </Reveal>
-      </Slide>
-
-      <Slide center nav="Ending · demo" notes="The handoff to the live demo. Fade to black follows.">
-        <Reveal>
-          <p className="kicker" style={kickerCenter}>
-            Now
-          </p>
-          <h2 className="display" style={{ fontSize: 'clamp(40px, 7vw, 92px)' }}>
-            See WayFinder <span className="accent-text">in action.</span>
-          </h2>
-        </Reveal>
+          <Build at={2} y={0}>
+            <p
+              style={{
+                marginTop: 26,
+                color: 'var(--fg-muted)',
+                fontSize: 'clamp(18px, 1.5vw, 23px)',
+                textAlign: 'center',
+              }}
+            >
+              From building the map to navigating it.
+            </p>
+            <div
+              aria-hidden="true"
+              style={{ width: 72, height: 2, margin: '22px auto 0', background: 'var(--primary)', opacity: 0.5 }}
+            />
+          </Build>
+        </div>
       </Slide>
     </Deck>
   );
