@@ -1,11 +1,16 @@
 {
-  "name": "slides",
+  "name": "wayfinder-showcase",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=18.18"
+  },
   "scripts": {
     "dev": "vite",
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check": "npm run typecheck && npm run build"
   },
   "dependencies": {
     "framer-motion": "^11.3.0",

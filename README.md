@@ -43,6 +43,30 @@ Run the TypeScript check with:
 npx tsc --noEmit
 ```
 
+Run the complete pre-deploy check with:
+
+```bash
+npm run check
+```
+
+## Deploy
+
+The project builds to a static `dist/` directory and requires Node.js 18.18 or newer
+during the build. Configure a static hosting provider with:
+
+| Setting | Value |
+| --- | --- |
+| Install command | `npm ci` |
+| Build command | `npm run check` |
+| Output directory | `dist` |
+
+The presentation uses hash-based slide navigation, so it does not require SPA rewrite
+rules. Asset and narration URLs are rooted at `/assets/` and `/audio/`; deploy the deck
+at the root of its domain or configure equivalent root-path asset handling.
+
+Before publishing, run `npm run check`, then optionally inspect the production build
+locally with `npm run preview`.
+
 ## Playback controls
 
 | Control | Action |
