@@ -9,7 +9,11 @@ export type SlideTiming = {
 // Build timestamps are seconds from the start of their slide. Entry 0 maps
 // to <Build at={1}>, entry 1 maps to <Build at={2}>, and so on.
 export const presentationTimeline: SlideTiming[] = [
-  { duration: 8, builds: [4] },
+  {
+    duration: 4.6,
+    builds: [2],
+    audio: '/audio/01-hook-question.mp3',
+  },
   { duration: 6 },
   { duration: 9 },
   { duration: 7 },

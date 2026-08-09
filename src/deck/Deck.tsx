@@ -143,11 +143,56 @@ export default function Deck({ children }: { children: ReactNode }) {
   const playbackBaseRef = useRef(presentationElapsed);
   const playbackStartedRef = useRef(0);
   const frameRef = useRef<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioSlideRef = useRef<number | null>(null);
 
   const timingFor = useCallback(
     (index: number) =>
       presentationTimeline[index] ?? { duration: 10, builds: [] },
     []
+  );
+
+  const syncAudio = useCallback(
+    (index: number, localTime: number, shouldPlay: boolean) => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      const source = timingFor(index).audio;
+      if (!source) {
+        if (audioSlideRef.current !== null || audio.getAttribute('src')) {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.removeAttribute('src');
+          audio.load();
+          audioSlideRef.current = null;
+        }
+        return;
+      }
+
+      if (audioSlideRef.current !== index) {
+        audio.pause();
+        audio.src = source;
+        audio.load();
+        audioSlideRef.current = index;
+      }
+
+      const audioDuration = Number.isFinite(audio.duration)
+        ? audio.duration
+        : localTime;
+      const desiredTime = Math.max(0, Math.min(localTime, audioDuration));
+      if (Math.abs(audio.currentTime - desiredTime) > 0.12) {
+        audio.currentTime = desiredTime;
+      }
+
+      const beforeAudioEnd =
+        !Number.isFinite(audio.duration) || localTime < audio.duration - 0.02;
+      if (shouldPlay && beforeAudioEnd) {
+        if (audio.paused) void audio.play().catch(() => undefined);
+      } else if (!audio.paused) {
+        audio.pause();
+      }
+    },
+    [timingFor]
   );
 
   const applyPresentationTime = useCallback(
@@ -168,6 +213,7 @@ export default function Deck({ children }: { children: ReactNode }) {
       const nextClicks = (timing.builds ?? []).filter((cue) => cue <= local)
         .length;
 
+      syncAudio(index, local, playingRef.current);
       elapsedRef.current = time;
       setPresentationElapsed(time);
       setSlideElapsed(local);
@@ -181,7 +227,7 @@ export default function Deck({ children }: { children: ReactNode }) {
         setClicks(nextClicks);
       }
     },
-    [timingFor, total]
+    [syncAudio, timingFor, total]
   );
 
   const pause = useCallback(() => {
@@ -190,9 +236,10 @@ export default function Deck({ children }: { children: ReactNode }) {
     const time =
       playbackBaseRef.current +
       (now - playbackStartedRef.current) / 1000;
-    applyPresentationTime(time);
     playingRef.current = false;
+    applyPresentationTime(time);
     setIsPlaying(false);
+    audioRef.current?.pause();
     if (frameRef.current != null) cancelAnimationFrame(frameRef.current);
     frameRef.current = null;
   }, [applyPresentationTime]);
@@ -204,7 +251,18 @@ export default function Deck({ children }: { children: ReactNode }) {
     playbackStartedRef.current = performance.now();
     playingRef.current = true;
     setIsPlaying(true);
+    applyPresentationTime(elapsedRef.current);
   }, [applyPresentationTime]);
+
+  useEffect(
+    () => () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio.pause();
+      audio.currentTime = 0;
+    },
+    []
+  );
 
   const togglePlayback = useCallback(() => {
     if (playingRef.current) pause();
@@ -561,6 +619,7 @@ export default function Deck({ children }: { children: ReactNode }) {
         className={'deck' + (cursorHidden ? ' nocursor' : '')}
         data-slide-elapsed={slideElapsed.toFixed(3)}
       >
+        <audio ref={audioRef} preload="auto" style={{ display: 'none' }} />
         <DeckCtx.Provider value={liveCtx}>
           <div className="slide-stage" key={slide}>
             {slides[slide]}
