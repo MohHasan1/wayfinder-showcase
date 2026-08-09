@@ -143,8 +143,9 @@ export default function Deck({ children }: { children: ReactNode }) {
   const playbackBaseRef = useRef(presentationElapsed);
   const playbackStartedRef = useRef(0);
   const frameRef = useRef<number | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioSlideRef = useRef<number | null>(null);
+  const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
+  const activeAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [audioBlocked, setAudioBlocked] = useState(false);
 
   const timingFor = useCallback(
     (index: number) =>
@@ -152,28 +153,53 @@ export default function Deck({ children }: { children: ReactNode }) {
     []
   );
 
+  const requestAudioPlayback = useCallback((audio: HTMLAudioElement) => {
+    const result = audio.play();
+    if (result) {
+      void result
+        .then(() => setAudioBlocked(false))
+        .catch(() => setAudioBlocked(true));
+    }
+  }, []);
+
+  // iOS grants media playback permission per element. Prime every narration
+  // element synchronously from the user's Play tap so later slide changes do
+  // not depend on a fresh gesture. The current slide is started normally after
+  // the silent prime pass.
+  const unlockNarration = useCallback(() => {
+    const current = slideRef.current;
+    audioRefs.current.forEach((audio, index) => {
+      if (!audio || index === current) return;
+      const volume = audio.volume;
+      audio.volume = 0;
+      const result = audio.play();
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = volume;
+      if (result) void result.catch(() => undefined);
+    });
+  }, []);
+
   const syncAudio = useCallback(
     (index: number, localTime: number, shouldPlay: boolean) => {
-      const audio = audioRef.current;
-      if (!audio) return;
-
       const source = timingFor(index).audio;
+      const audio = source ? audioRefs.current[index] : null;
       if (!source) {
-        if (audioSlideRef.current !== null || audio.getAttribute('src')) {
-          audio.pause();
-          audio.currentTime = 0;
-          audio.removeAttribute('src');
-          audio.load();
-          audioSlideRef.current = null;
+        if (activeAudioRef.current) {
+          activeAudioRef.current.pause();
+          activeAudioRef.current.currentTime = 0;
+          activeAudioRef.current = null;
         }
         return;
       }
+      if (!audio) return;
 
-      if (audioSlideRef.current !== index) {
-        audio.pause();
-        audio.src = source;
-        audio.load();
-        audioSlideRef.current = index;
+      if (activeAudioRef.current !== audio) {
+        if (activeAudioRef.current) {
+          activeAudioRef.current.pause();
+          activeAudioRef.current.currentTime = 0;
+        }
+        activeAudioRef.current = audio;
       }
 
       const audioDuration = Number.isFinite(audio.duration)
@@ -187,12 +213,12 @@ export default function Deck({ children }: { children: ReactNode }) {
       const beforeAudioEnd =
         !Number.isFinite(audio.duration) || localTime < audio.duration - 0.02;
       if (shouldPlay && beforeAudioEnd) {
-        if (audio.paused) void audio.play().catch(() => undefined);
+        if (audio.paused) requestAudioPlayback(audio);
       } else if (!audio.paused) {
         audio.pause();
       }
     },
-    [timingFor]
+    [requestAudioPlayback, timingFor]
   );
 
   const applyPresentationTime = useCallback(
@@ -239,30 +265,37 @@ export default function Deck({ children }: { children: ReactNode }) {
     playingRef.current = false;
     applyPresentationTime(time);
     setIsPlaying(false);
-    audioRef.current?.pause();
+    activeAudioRef.current?.pause();
     if (frameRef.current != null) cancelAnimationFrame(frameRef.current);
     frameRef.current = null;
   }, [applyPresentationTime]);
 
   const play = useCallback(() => {
     if (playingRef.current) return;
+    unlockNarration();
     if (elapsedRef.current >= presentationDuration) applyPresentationTime(0);
     playbackBaseRef.current = elapsedRef.current;
     playbackStartedRef.current = performance.now();
     playingRef.current = true;
     setIsPlaying(true);
     applyPresentationTime(elapsedRef.current);
-  }, [applyPresentationTime]);
+  }, [applyPresentationTime, unlockNarration]);
 
   useEffect(
     () => () => {
-      const audio = audioRef.current;
-      if (!audio) return;
-      audio.pause();
-      audio.currentTime = 0;
+      audioRefs.current.forEach((audio) => {
+        if (!audio) return;
+        audio.pause();
+        audio.currentTime = 0;
+      });
     },
     []
   );
+
+  const retryAudio = useCallback(() => {
+    unlockNarration();
+    syncAudio(slideRef.current, slideElapsed, playingRef.current);
+  }, [slideElapsed, syncAudio, unlockNarration]);
 
   const togglePlayback = useCallback(() => {
     if (playingRef.current) pause();
@@ -619,7 +652,20 @@ export default function Deck({ children }: { children: ReactNode }) {
         className={'deck' + (cursorHidden ? ' nocursor' : '')}
         data-slide-elapsed={slideElapsed.toFixed(3)}
       >
-        <audio ref={audioRef} preload="auto" style={{ display: 'none' }} />
+        <div aria-hidden="true" style={{ display: 'none' }}>
+          {presentationTimeline.map((timing, index) =>
+            timing.audio ? (
+              <audio
+                key={timing.audio}
+                ref={(element) => {
+                  audioRefs.current[index] = element;
+                }}
+                src={timing.audio}
+                preload="auto"
+              />
+            ) : null
+          )}
+        </div>
         <DeckCtx.Provider value={liveCtx}>
           <div className="slide-stage" key={slide}>
             {slides[slide]}
@@ -723,6 +769,11 @@ export default function Deck({ children }: { children: ReactNode }) {
         )}
 
         <div className={'noir-dock' + (hideUI ? ' hidden' : '')}>
+          {audioBlocked && (
+            <button className="noir-audio-retry" onClick={retryAudio}>
+              Tap to enable audio
+            </button>
+          )}
           {/* phones: nav floats bare above the tools pill (see base.css) */}
           <div className="noir-bar noir-nav-bar">{navCluster}</div>
           <div className="noir-bar">

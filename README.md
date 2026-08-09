@@ -86,6 +86,10 @@ locally with `npm run preview`.
 Manual navigation pauses autoplay and stops the current narration. Restart resets the
 slide clock, Build state, and audio position.
 
+On iPhone or iPad, start playback with the deck's Play button so Safari can authorize
+the narration elements. If the browser later blocks sound, the dock displays a
+**Tap to enable audio** recovery button without resetting the presentation timeline.
+
 ## Project structure
 
 ```text

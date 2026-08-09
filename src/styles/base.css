@@ -2014,7 +2014,7 @@ strong {
 }
 
 /* very narrow: simplify the dashboard mock so it fits a stacked Split half */
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .dbars {
     display: none;
   }
@@ -2039,6 +2039,21 @@ strong {
 }
 .noir-dock:hover {
   opacity: 1;
+}
+.noir-audio-retry {
+  display: block;
+  min-height: 38px;
+  margin: 0 auto 7px;
+  padding: 8px 14px;
+  border: 1px solid rgba(52, 220, 216, 0.35);
+  border-radius: 999px;
+  background: rgba(18, 18, 20, 0.88);
+  box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.85);
+  color: #f5f5f7;
+  font: 600 13px/1 var(--font-body);
+  cursor: pointer;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
 }
 .noir-bar {
   position: relative;
@@ -2751,34 +2766,37 @@ strong {
 }
 @media (max-width: 640px) {
   .noir-dock {
+    width: min(420px, calc(100vw - 20px));
     opacity: 1;
-    bottom: 14px;
+    bottom: max(10px, env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 5px;
   }
+  .noir-audio-retry {
+    min-height: 44px;
+    margin-bottom: 3px;
+    padding-inline: 18px;
+  }
   .noir-bar.noir-nav-bar {
     display: flex;
-    padding: 0;
-    background: none;
-    border: none;
-    box-shadow: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.5));
+    width: fit-content;
+    max-width: 100%;
+    padding: 4px 7px;
   }
   .noir-nav-inline,
   .noir-bar > .noir-sep {
     display: none;
   }
   .noir-bar {
+    max-width: 100%;
     gap: 2px;
     padding: 6px 7px;
   }
   .noir-icon-btn {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     font-size: 17px;
   }
   .noir-icon-btn.sm {
@@ -2790,6 +2808,10 @@ strong {
   }
   .noir-counter-now {
     font-size: 15px;
+  }
+  .noir-playback-time {
+    padding-inline: 4px 6px;
+    font-size: 10px;
   }
   .noir-rail {
     width: min(248px, 84vw);
@@ -2821,6 +2843,17 @@ strong {
      here (touch has no hover anyway) instead of showing them cut off */
   .ann-bar [data-tip]::after {
     display: none;
+  }
+}
+@media (max-width: 480px) {
+  .noir-dock {
+    width: calc(100vw - 12px);
+  }
+  .noir-playback-time {
+    display: none;
+  }
+  .noir-counter {
+    padding-inline: 5px;
   }
 }
 
