@@ -658,7 +658,10 @@ export default function Deck({ children }: { children: ReactNode }) {
         className={'deck' + (cursorHidden ? ' nocursor' : '')}
         data-slide-elapsed={slideElapsed.toFixed(3)}
       >
-        <div aria-hidden="true" style={{ display: 'none' }}>
+        <div
+          aria-hidden="true"
+          style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
+        >
           {presentationTimeline.map((timing, index) =>
             timing.audio ? (
               <audio
