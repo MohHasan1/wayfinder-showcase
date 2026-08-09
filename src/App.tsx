@@ -176,24 +176,77 @@ export default function App() {
         }
       />
 
-      <Split
-        nav="Problem · orgs"
-        notes="Split: organizations manage the map, visitors find the way."
-        kicker="Two sides"
-        title={
-          <>
-            Organizations <span className="accent-text">manage</span> the map.
-          </>
-        }
-        body="Hospitals, campuses, malls, and offices need a simple way to build and maintain indoor maps."
-        media={
-          <BrowserFrame url="wayfinder.app/organization">
-            <div style={{ ...screenCard, borderRadius: 0, border: 'none' }}>
-              {img(SHOT('04-organization-landing-page.png'), 'Organization landing page')}
+      <Slide full nav="Problem · orgs" notes="Split: organizations manage the map, visitors find the way.">
+        <div
+          style={{
+            width: 'min(1580px, calc(100vw - 140px))',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 0.35fr) minmax(0, 0.65fr)',
+            columnGap: 64,
+            alignItems: 'center',
+          }}
+        >
+          <Reveal
+            style={{
+              width: '100%',
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+            }}
+          >
+            <p className="kicker" style={{ marginBottom: 16 }}>
+              FOR ORGANIZATIONS
+            </p>
+            <h2
+              className="headline"
+              style={{
+                fontSize: 'clamp(42px, 3.6vw, 64px)',
+                lineHeight: 0.98,
+                letterSpacing: '-0.035em',
+                maxWidth: 540,
+              }}
+            >
+              <span style={{ display: 'block' }}>Build, manage,</span>
+              <span style={{ display: 'block' }}>and publish</span>
+              <span className="accent-text" style={{ display: 'block' }}>indoor maps.</span>
+            </h2>
+            <p
+              style={{
+                maxWidth: 480,
+                marginTop: 28,
+                color: 'var(--fg-muted)',
+                fontSize: 'clamp(17px, 1.25vw, 21px)',
+                lineHeight: 1.5,
+              }}
+            >
+              Create floors, build maps, publish for visitors, and generate room QR codes.
+            </p>
+          </Reveal>
+
+          <Reveal style={{ width: '100%', minWidth: 0 }}>
+            <div
+              style={{
+                width: '100%',
+                minWidth: 0,
+                overflow: 'hidden',
+                borderRadius: 18,
+                border: '1px solid var(--hair)',
+                boxShadow: 'var(--shadow)',
+              }}
+            >
+              <img
+                src="/assets/new/slide_7.png"
+                alt="Wayfinder Umbrella Medical Centre building dashboard showing floors and publishing controls"
+                style={{ display: 'block', width: '100%', height: 'auto', objectFit: 'contain' }}
+              />
             </div>
-          </BrowserFrame>
-        }
-      />
+          </Reveal>
+        </div>
+      </Slide>
 
       <Split
         nav="Problem · visitors"
