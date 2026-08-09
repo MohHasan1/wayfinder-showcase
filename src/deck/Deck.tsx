@@ -146,6 +146,7 @@ export default function Deck({ children }: { children: ReactNode }) {
   const audioElRef = useRef<HTMLAudioElement | null>(null);
   const activeAudioSrcRef = useRef<string | null>(null);
   const [audioBlocked, setAudioBlocked] = useState(false);
+  const [audioDebug, setAudioDebug] = useState<string | null>(null);
 
   const timingFor = useCallback(
     (index: number) =>
@@ -157,8 +158,17 @@ export default function Deck({ children }: { children: ReactNode }) {
     const result = audio.play();
     if (result) {
       void result
-        .then(() => setAudioBlocked(false))
-        .catch(() => setAudioBlocked(true));
+        .then(() => {
+          setAudioBlocked(false);
+          setAudioDebug(null);
+        })
+        .catch((err: unknown) => {
+          setAudioBlocked(true);
+          const e = err as { name?: string; message?: string } | undefined;
+          setAudioDebug(
+            `${e?.name ?? 'Error'}: ${e?.message ?? 'unknown'} | src=${audio.currentSrc || '(none)'} | ready=${audio.readyState} net=${audio.networkState} err=${audio.error?.code ?? '-'}`
+          );
+        });
     }
   }, []);
 
@@ -766,6 +776,23 @@ export default function Deck({ children }: { children: ReactNode }) {
             <button className="noir-audio-retry" onClick={retryAudio}>
               Tap to enable audio
             </button>
+          )}
+          {audioDebug && (
+            <div
+              style={{
+                fontSize: 10,
+                lineHeight: 1.3,
+                color: '#f5f5f7',
+                background: 'rgba(18,18,20,0.88)',
+                borderRadius: 8,
+                padding: '4px 8px',
+                margin: '0 auto 7px',
+                maxWidth: 'min(420px, calc(100vw - 20px))',
+                wordBreak: 'break-all',
+              }}
+            >
+              {audioDebug}
+            </div>
           )}
           {/* phones: nav floats bare above the tools pill (see base.css) */}
           <div className="noir-bar noir-nav-bar">{navCluster}</div>
