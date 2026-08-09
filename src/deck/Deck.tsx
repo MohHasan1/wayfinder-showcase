@@ -100,6 +100,19 @@ export default function Deck({ children }: { children: ReactNode }) {
     []
   );
 
+  // Touch-primary devices (phones, tablets) report a coarse pointer as their
+  // main input, laptops/desktops report fine even when a touchscreen is also
+  // present. This deck is desktop-only, so gate on that instead of width.
+  const [isTouchDevice, setIsTouchDevice] = useState(
+    () => window.matchMedia('(pointer: coarse)').matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(pointer: coarse)');
+    const onChange = () => setIsTouchDevice(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   const [slide, setSlide] = useState(() => {
     const h = parseInt(window.location.hash.slice(1), 10);
     return h >= 1 && h <= total ? h - 1 : 0;
@@ -637,6 +650,38 @@ export default function Deck({ children }: { children: ReactNode }) {
       </div>
     </>
   );
+
+  if (isTouchDevice) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          padding: 32,
+          background: 'var(--bg)',
+          color: 'var(--fg)',
+        }}
+      >
+        <img
+          src="/assets/logo/wayfinder-no-bg.png"
+          alt="Wayfinder logo"
+          style={{ width: 48, height: 'auto', marginBottom: 20 }}
+        />
+        <h2 style={{ fontSize: 22, fontWeight: 650, marginBottom: 10 }}>
+          Desktop only
+        </h2>
+        <p style={{ maxWidth: 340, color: 'var(--fg-muted)', fontSize: 15, lineHeight: 1.5 }}>
+          This showcase is built for a large screen. Please open it on a
+          laptop or desktop computer — phones and tablets aren't supported.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <MotionConfig reducedMotion="user">
